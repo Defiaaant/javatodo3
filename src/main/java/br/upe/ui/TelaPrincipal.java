@@ -36,6 +36,11 @@ public class TelaPrincipal {
             boolean selecionado = ((JCheckBox) e.getSource()).isSelected();
             controlador.exibirFinalizadas(selecionado);
         });
+        String[] nomes = {"Light", "Dark", "Azul", "Verde", "Vermelho"};
+        Color[] cores = {Color.WHITE, Color.BLUE, Color.GREEN, Color.RED, Color.BLACK};
+
+        JComboBox<String> combo = new JComboBox<>(nomes);
+        combo.addActionListener(e -> pnlMain.setBackground(cores[combo.getSelectedIndex()]));
     }
 
     private void adicionarTarefa(String texto) {
