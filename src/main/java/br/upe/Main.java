@@ -8,7 +8,7 @@ public class Main {
     public static void main(String[] args) {
         TelaPrincipal pnlMain = new TelaPrincipal();
 
-        JFrame frame = new JFrame("ToDo");
+        JFrame frame = new JFrame("Afazeres");
         frame.setContentPane(pnlMain.getPnlMain());
         frame.pack();
         frame.setVisible(true);

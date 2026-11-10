@@ -2,14 +2,9 @@ package br.upe.ui;
 
 import br.upe.controller.TarefaControlador;
 import br.upe.model.Tarefa;
-import br.upe.model.TarefaTableModel;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,10 +32,61 @@ public class TelaPrincipal {
             controlador.exibirFinalizadas(selecionado);
         });
         String[] nomes = {"Light", "Dark", "Azul", "Verde", "Vermelho"};
-        Color[] cores = {Color.WHITE, Color.BLUE, Color.GREEN, Color.RED, Color.BLACK};
+        Color[] coresFundo = {Color.decode("#FFFFFF"), Color.decode("#000000"), Color.decode("#1565C0"), Color.decode("#2E7D32"), Color.decode("#C62828")};
+        Color[] coresTexto = {Color.decode("#000000"), Color.decode("#4fe4ba"), Color.decode("#FFFFFF"), Color.decode("#FFFFFF"), Color.decode("#FFFFFF")};
 
-        JComboBox<String> combo = new JComboBox<>(nomes);
-        combo.addActionListener(e -> pnlMain.setBackground(cores[combo.getSelectedIndex()]));
+        JComboBox<String> acoesEscolha = new JComboBox<>(nomes);
+
+        JPanel pnlOpcoes = new JPanel();
+        pnlOpcoes.add(acoesEscolha);
+        pnlOpcoes.setVisible(false);
+
+        acoesEscolha.addActionListener(e -> {
+            int i = acoesEscolha.getSelectedIndex();
+            aplicarCores(pnlMain, coresFundo[i], coresTexto[i]);
+        });
+
+        java.net.URL url = getClass().getResource("/img.png");
+        JButton btnTema;
+        if (url != null) {
+            Image img = new ImageIcon(url).getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH);
+            btnTema = new JButton(new ImageIcon(img));
+        } else {
+            btnTema = new JButton("🎨");
+        }
+        btnTema.setToolTipText("Opções de tema");
+        btnTema.setBorderPainted(false);
+        btnTema.setContentAreaFilled(true);
+        btnTema.setFocusPainted(false);
+
+        btnTema.addActionListener(e -> {
+            pnlOpcoes.setVisible(!pnlOpcoes.isVisible());
+            pnlMain.revalidate();
+            pnlMain.repaint();
+        });
+
+        JPanel pnlTema = new JPanel();
+        pnlTema.add(btnTema);
+        pnlTema.add(pnlOpcoes);
+        pnlMain.add(pnlTema, BorderLayout.SOUTH);
+    }
+
+    private void aplicarCores(Container container, Color fundo, Color texto) {
+        container.setBackground(fundo);
+        container.setForeground(texto);
+        for (Component c : container.getComponents()) {
+            c.setBackground(fundo);
+            c.setForeground(texto);
+            if (c instanceof JLabel || c instanceof JCheckBox) {
+                ((JComponent) c).setOpaque(true);
+            }
+            if (c instanceof JTextField) {
+                ((JTextField) c).setCaretColor(texto);
+            }
+            if (c instanceof Container) {
+                aplicarCores((Container) c, fundo, texto);
+            }
+        }
     }
 
     private void adicionarTarefa(String texto) {
