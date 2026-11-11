@@ -32,8 +32,8 @@ public class TelaPrincipal {
             controlador.exibirFinalizadas(selecionado);
         });
         String[] nomes = {"Light", "Dark", "Azul", "Verde", "Vermelho"};
-        Color[] coresFundo = {Color.decode("#FFFFFF"), Color.decode("#000000"), Color.decode("#1565C0"), Color.decode("#2E7D32"), Color.decode("#C62828")};
-        Color[] coresTexto = {Color.decode("#000000"), Color.decode("#4fe4ba"), Color.decode("#FFFFFF"), Color.decode("#FFFFFF"), Color.decode("#FFFFFF")};
+        Color[] coresFundo = {Color.decode("#FFFFFF"), Color.decode("#000000"), Color.decode("#93b3cd"), Color.decode("#5cd697"), Color.decode("#C62828")};
+        Color[] coresTexto = {Color.decode("#000000"), Color.decode("#4fe4ba"), Color.decode("#FFFFFF"), Color.decode("#FFFFFF"), Color.decode("#ac4343")};
 
         JComboBox<String> acoesEscolha = new JComboBox<>(nomes);
 
@@ -49,14 +49,15 @@ public class TelaPrincipal {
         java.net.URL url = getClass().getResource("/img.png");
         JButton btnTema;
         if (url != null) {
-            Image img = new ImageIcon(url).getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH);
+            Image img = new ImageIcon(url).getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
             btnTema = new JButton(new ImageIcon(img));
         } else {
             btnTema = new JButton("🎨");
         }
+
         btnTema.setToolTipText("Opções de tema");
         btnTema.setBorderPainted(false);
-        btnTema.setContentAreaFilled(true);
+        btnTema.setContentAreaFilled(false);
         btnTema.setFocusPainted(false);
 
         btnTema.addActionListener(e -> {
