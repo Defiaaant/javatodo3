@@ -20,6 +20,7 @@ public class TarefaControlador {
     //Metodos de negocio
     public void adicionarTarefaAtiva(Tarefa tarefa) {
         this.tarefaTableModel.getTarefasAtivas().add(tarefa);
+        this.tarefaTableModel.fireTableDataChanged();
     }
 
     public void exibirFinalizadas(boolean exibir) {
