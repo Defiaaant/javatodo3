@@ -2,6 +2,7 @@ package br.upe.controller;
 
 import br.upe.model.Tarefa;
 import br.upe.model.TarefaTableModel;
+import br.upe.savetool.GerenciarSaves;
 
 import javax.swing.event.TableModelListener;
 import java.util.ArrayList;
@@ -15,6 +16,13 @@ public class TarefaControlador {
     //Construtor
     public TarefaControlador() {
         tarefaTableModel = new TarefaTableModel();
+        carregarNotasSalvas();
+    }
+    private void carregarNotasSalvas() {
+        List<List<Tarefa>> dados = GerenciarSaves.carregarNotas();
+        tarefaTableModel.setTarefasAtivas(dados.get(0));
+        tarefaTableModel.setTarefasFinalizadas(dados.get(1));
+        tarefaTableModel.fireTableDataChanged();
     }
 
     //Metodos de negocio

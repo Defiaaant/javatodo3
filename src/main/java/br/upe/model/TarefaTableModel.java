@@ -80,6 +80,18 @@ public class TarefaTableModel extends AbstractTableModel {
         this.fireTableDataChanged();
     }
 
+
+    public void salvarEstado() {
+        List<Tarefa> apenasAtivas = new ArrayList<>();
+        for (Tarefa t : tarefasAtivas) {
+            if (t.isFinalizada() == null || !t.isFinalizada()) {
+                apenasAtivas.add(t);
+            }
+        }
+        br.upe.savetool.GerenciarSaves.salvarNotas(apenasAtivas, this.tarefasFinalizadas);
+    }
+
+
     public List<Tarefa> getTarefasFinalizadas() {
         return tarefasFinalizadas;
     }

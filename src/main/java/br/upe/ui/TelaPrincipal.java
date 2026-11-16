@@ -22,6 +22,14 @@ public class TelaPrincipal {
 
     public TelaPrincipal() {
         super();
+        if (controlador == null) {
+            controlador = new TarefaControlador();
+        }
+        if (tblTarefas != null) {
+            tblTarefas.setModel(controlador.getTarefaTableModel());
+            tblTarefas.getColumnModel().getColumn(0).setMaxWidth(20);
+        }
+
         tarefas = new ArrayList<>();
         btnAdicionarTarefa.addActionListener(e -> {
             adicionarTarefa(txtDescricaoTarefa.getText());
