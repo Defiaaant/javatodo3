@@ -5,8 +5,6 @@ import br.upe.model.Tarefa;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class TelaPrincipal {
     private JPanel pnlMain;
@@ -16,32 +14,31 @@ public class TelaPrincipal {
     private JTable tblTarefas;
     private JCheckBox chkExibirFinalizadas;
 
-    private List<Tarefa> tarefas;
-
     private TarefaControlador controlador;
 
     public TelaPrincipal() {
         super();
-        if (controlador == null) {
-            controlador = new TarefaControlador();
-        }
-        if (tblTarefas != null) {
-            tblTarefas.setModel(controlador.getTarefaTableModel());
-            tblTarefas.getColumnModel().getColumn(0).setMaxWidth(20);
-        }
+        controlador = new TarefaControlador();
+        tblTarefas = new JTable(controlador.getTarefaTableModel());
+        tblTarefas.setTableHeader(null);
+        tblTarefas.getColumnModel().getColumn(0).setMaxWidth(20);
+        pnlMain.add(new JScrollPane(tblTarefas), BorderLayout.CENTER);
 
-        tarefas = new ArrayList<>();
+        controlador.getTarefaTableModel().addTableModelListener(e -> salvar());
+
+        controlador.getTarefaTableModel().addTableModelListener(e -> salvar());
         btnAdicionarTarefa.addActionListener(e -> {
             adicionarTarefa(txtDescricaoTarefa.getText());
             txtDescricaoTarefa.setText("");
         });
+        txtDescricaoTarefa.addActionListener(e -> btnAdicionarTarefa.doClick());
         chkExibirFinalizadas.addActionListener(e -> {
             boolean selecionado = ((JCheckBox) e.getSource()).isSelected();
             controlador.exibirFinalizadas(selecionado);
         });
         String[] nomes = {"Light", "Dark", "Azul", "Verde", "Vermelho"};
-        Color[] coresFundo = {Color.decode("#FFFFFF"), Color.decode("#000000"), Color.decode("#93b3cd"), Color.decode("#5cd697"), Color.decode("#C62828")};
-        Color[] coresTexto = {Color.decode("#000000"), Color.decode("#4fe4ba"), Color.decode("#FFFFFF"), Color.decode("#FFFFFF"), Color.decode("#ac4343")};
+        Color[] coresFundo = {Color.decode("#FFFFFF"), Color.decode("#000000"), Color.decode("#93b3cd"), Color.decode("#5cd697"), Color.decode("#ac4343")};
+        Color[] coresTexto = {Color.decode("#000000"), Color.decode("#4fe4ba"), Color.decode("#1e1919"), Color.decode("#000000"), Color.decode("#FFFFFF")};
 
         JComboBox<String> acoesEscolha = new JComboBox<>(nomes);
 
@@ -99,20 +96,23 @@ public class TelaPrincipal {
     }
 
     private void adicionarTarefa(String texto) {
-        Tarefa tarefa = new Tarefa(texto, tarefas.size());
-        controlador.adicionarTarefaAtiva(tarefa);
-        tblTarefas.revalidate();
-        tblTarefas.repaint();
+        if (texto == null || texto.isBlank()) {
+            JOptionPane.showMessageDialog(pnlMain, "Digite a descrição da tarefa.");
+            return;
+        }
+        int ordem = controlador.getTarefaTableModel().getTarefasAtivas().size();
+        controlador.adicionarTarefaAtiva(new Tarefa(texto.trim(), ordem));
+    }
+
+    public void salvar() {
+        try {
+            controlador.getTarefaTableModel().salvarEstado();
+        } catch (Exception ex) {
+            System.err.println("Falha ao salvar: " + ex);
+        }
     }
 
     public JPanel getPnlMain() {
         return this.pnlMain;
     }
-
-    private void createUIComponents() {
-        controlador = new TarefaControlador();
-        tblTarefas = new JTable(controlador.getTarefaTableModel());
-        tblTarefas.getColumnModel().getColumn(0).setMaxWidth(20);
-    }
-
 }

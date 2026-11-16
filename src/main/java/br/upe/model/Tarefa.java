@@ -54,7 +54,7 @@ public class Tarefa{
     }
 
     public void setFinalizada(Boolean finalizada) {
-        this.finalizada = finalizada;
+        this.finalizada = false;
     }
 
     public int getOrdem() {

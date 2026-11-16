@@ -66,7 +66,7 @@ public class GerenciarSaves {
                 resultado.add(new ArrayList<>());
             }
         }
-        catch (IOException e) {
+        catch (IOException | JsonParseException | java.time.DateTimeException e) {
             System.err.println("Erro ao ler Notas: " + e.getMessage());
             resultado.add(new ArrayList<>());
             resultado.add(new ArrayList<>());
