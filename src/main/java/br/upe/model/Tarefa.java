@@ -15,6 +15,7 @@ public class Tarefa{
         this.dataCriacao = LocalDate.now();
         this.descricao = texto;
         this.ordem = ordem;
+        this.finalizada = false;
     }
 
     public String getDescricao() {
@@ -50,11 +51,12 @@ public class Tarefa{
     }
 
     public Boolean isFinalizada() {
-        return finalizada;
+        return Boolean.TRUE.equals(finalizada);
     }
 
     public void setFinalizada(Boolean finalizada) {
-        this.finalizada = false;
+        this.finalizada = Boolean.TRUE.equals(finalizada);
+        this.dataFinalizacao = this.finalizada ? LocalDate.now() : null;
     }
 
     public int getOrdem() {
