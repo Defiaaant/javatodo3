@@ -1,0 +1,17 @@
+{
+  "ativas": [
+    {
+      "descricao": "diz ai",
+      "dataCriacao": "2026-11-17",
+      "finalizada": false,
+      "ordem": 0
+    },
+    {
+      "descricao": "liga ai",
+      "dataCriacao": "2026-11-17",
+      "finalizada": false,
+      "ordem": 0
+    }
+  ],
+  "finalizadas": []
+}

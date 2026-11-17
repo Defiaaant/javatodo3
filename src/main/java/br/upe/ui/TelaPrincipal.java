@@ -26,7 +26,6 @@ public class TelaPrincipal {
 
         controlador.getTarefaTableModel().addTableModelListener(e -> salvar());
 
-        controlador.getTarefaTableModel().addTableModelListener(e -> salvar());
         btnAdicionarTarefa.addActionListener(e -> {
             adicionarTarefa(txtDescricaoTarefa.getText());
             txtDescricaoTarefa.setText("");
