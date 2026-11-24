@@ -47,7 +47,7 @@ public class TelaPrincipal {
             }
         });
         txtDescricaoTarefa.addActionListener(e -> btnAdicionarTarefa.doClick());
-        btnApagarFinalizados = new JButton("Apagar Finalizadas");
+        btnApagarFinalizados = new JButton("Apagar tarefa finalizada");
         btnApagarFinalizados.setVisible(false);
         btnApagarFinalizados.addActionListener(e -> removerFinalizados());
         chkExibirFinalizadas.addActionListener(e -> {
