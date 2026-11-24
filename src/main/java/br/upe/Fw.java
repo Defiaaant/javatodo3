@@ -1,6 +1,6 @@
-import br.upe.TelaLogin;
+package br.upe;
 
-import javax.swing.*;
+import br.upe.security.TelaLogin;
 
 public class Fw {
     public static void main(String[] args) {

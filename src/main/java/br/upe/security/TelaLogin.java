@@ -1,4 +1,4 @@
-package br.upe;
+package br.upe.security;
 import br.upe.ui.TelaPrincipal;
 
 import javax.swing.*;

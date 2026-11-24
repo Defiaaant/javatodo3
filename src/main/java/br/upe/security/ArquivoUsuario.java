@@ -1,4 +1,4 @@
-package br.upe;
+package br.upe.security;
 
 import java.io.File;
 import java.io.IOException;
