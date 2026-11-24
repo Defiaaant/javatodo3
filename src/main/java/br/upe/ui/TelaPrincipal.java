@@ -21,8 +21,15 @@ public class TelaPrincipal {
         controlador = new TarefaControlador();
         tblTarefas = new JTable(controlador.getTarefaTableModel());
         tblTarefas.setTableHeader(null);
-        tblTarefas.getColumnModel().getColumn(0).setMaxWidth(20);
+        tblTarefas.setRowHeight(30);
+        tblTarefas.getColumnModel().getColumn(0).setMaxWidth(40);
+        tblTarefas.setShowGrid(false);
         pnlMain.add(new JScrollPane(tblTarefas), BorderLayout.CENTER);
+
+        pnlMain.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        btnAdicionarTarefa.setMargin(new Insets(6, 16, 6, 16));
+        btnAdicionarTarefa.setFont(btnAdicionarTarefa.getFont().deriveFont(Font.BOLD));
+        txtDescricaoTarefa.setMargin(new Insets(4, 8, 4, 8));
 
         controlador.getTarefaTableModel().addTableModelListener(e -> salvar());
 
@@ -70,12 +77,11 @@ public class TelaPrincipal {
             pnlMain.repaint();
         });
 
-        JPanel pnlTema = new JPanel();
+        JPanel pnlTema = new JPanel(new FlowLayout(FlowLayout.RIGHT, 12, 8));
         pnlTema.add(btnTema);
         pnlTema.add(pnlOpcoes);
         pnlMain.add(pnlTema, BorderLayout.SOUTH);
     }
-
     private void aplicarCores(Container container, Color fundo, Color texto) {
         container.setBackground(fundo);
         container.setForeground(texto);
