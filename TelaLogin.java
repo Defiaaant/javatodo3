@@ -1,105 +1,124 @@
 package br.upe;
+import br.upe.ui.TelaPrincipal;
 
 import javax.swing.*;
-import java.awt.*;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 
-public class TelaLogin extends JFrame {
+public class   TelaLogin extends JFrame implements ActionListener {
 
-    private final CredenciaisRepositorio repo = new CredenciaisRepositorio();
+    private ArquivoUsuario arquivo = new ArquivoUsuario();
 
-    private final JLabel lblTitulo = new JLabel("", SwingConstants.CENTER);
-    private final JTextField txtUsuario = new JTextField(15);
-    private final JPasswordField txtSenha = new JPasswordField(15);
-    private final JButton btnAcao = new JButton();
-    private final JButton btnApagar = new JButton("Apagar conta");
+    private JLabel lblTitulo = new JLabel("", SwingConstants.CENTER);
+    private JTextField txtNome = new JTextField();
+    private JPasswordField txtSenha = new JPasswordField();
+    private JButton btnEntrar = new JButton();
+    private JButton btnApagar = new JButton("Apagar conta");
 
     public TelaLogin() {
-        setTitle("Acesso");
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        montarTela();
-        atualizarModo();
-        pack();
+        setTitle("Login");
+        setSize(300, 300);
         setLocationRelativeTo(null);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setLayout(new GridLayout(7, 1, 5, 5));
+
+        add(lblTitulo);
+        add(new JLabel("Nome:"));
+        add(txtNome);
+        add(new JLabel("Senha:"));
+        add(txtSenha);
+        add(btnEntrar);
+        add(btnApagar);
+
+        btnEntrar.addActionListener(this);
+        btnApagar.addActionListener(this);
+
+        atualizarTela();
     }
 
-    private void montarTela() {
-        JPanel form = new JPanel(new GridLayout(0, 1, 5, 5));
-        form.setBorder(BorderFactory.createEmptyBorder(15, 20, 15, 20));
-
-        lblTitulo.setFont(lblTitulo.getFont().deriveFont(Font.BOLD, 16f));
-        form.add(lblTitulo);
-        form.add(new JLabel("Usuário:"));
-        form.add(txtUsuario);
-        form.add(new JLabel("Senha:"));
-        form.add(txtSenha);
-        form.add(btnAcao);
-        form.add(btnApagar);
-
-        add(form);
-
-        btnAcao.addActionListener(e -> aoClicarAcao());
-        btnApagar.addActionListener(e -> aoClicarApagar());
-        getRootPane().setDefaultButton(btnAcao); // Enter aciona o botão
-    }
-
-    /** Alterna entre modo cadastro e modo entrada. */
-    private void atualizarModo() {
-        boolean jaTemConta = repo.existeConta();
-        lblTitulo.setText(jaTemConta ? "Entrar" : "Criar conta");
-        btnAcao.setText(jaTemConta ? "Entrar" : "Cadastrar");
-        btnApagar.setVisible(jaTemConta);
-        txtUsuario.setText("");
+    // Muda a tela dependendo se já existe conta ou não
+    private void atualizarTela() {
+        if (arquivo.existeConta()) {
+            lblTitulo.setText("Entrar");
+            btnEntrar.setText("Entrar");
+            btnApagar.setVisible(true);
+        } else {
+            lblTitulo.setText("Criar conta");
+            btnEntrar.setText("Cadastrar");
+            btnApagar.setVisible(false);
+        }
+        txtNome.setText("");
         txtSenha.setText("");
-        pack();
     }
 
-    private void aoClicarAcao() {
-        String usuario = txtUsuario.getText().trim();
+    // Método chamado quando qualquer botão é clicado
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == btnEntrar) {
+            clicouEntrar();
+        } else if (e.getSource() == btnApagar) {
+            clicouApagar();
+        }
+    }
+
+    private void clicouEntrar() {
+        String nome = txtNome.getText();
         String senha = new String(txtSenha.getPassword());
 
-        if (usuario.isEmpty() || senha.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Preencha usuário e senha.");
+        if (nome.equals("") || senha.equals("")) {
+            JOptionPane.showMessageDialog(this, "Preencha nome e senha!");
             return;
         }
 
-        if (repo.existeConta()) {
-            if (repo.validar(usuario, senha)) {
-                abrirAplicacao();
+        try {
+            if (arquivo.existeConta()) {
+                // Já tem conta: confere os dados
+                if (arquivo.validar(nome, senha)) {
+                    abrirAplicacao();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Nome ou senha incorretos!");
+                }
             } else {
-                JOptionPane.showMessageDialog(this, "Usuário ou senha incorretos.",
-                        "Erro", JOptionPane.ERROR_MESSAGE);
-            }
-        } else {
-            try {
-                repo.salvar(usuario, senha);
+                // Não tem conta: cria uma nova
+                arquivo.salvar(nome, senha);
                 abrirAplicacao();
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(this, "Erro ao salvar: " + ex.getMessage(),
-                        "Erro", JOptionPane.ERROR_MESSAGE);
             }
+        } catch (IOException erro) {
+            JOptionPane.showMessageDialog(this, "Erro com o arquivo!");
         }
     }
 
-    private void aoClicarApagar() {
-        int opcao = JOptionPane.showConfirmDialog(this,
-                "Tem certeza que deseja apagar esta conta?",
-                "Confirmar", JOptionPane.YES_NO_OPTION);
-        if (opcao == JOptionPane.YES_OPTION) {
-            try {
-                repo.apagar();
-                atualizarModo(); // volta para a tela de cadastro
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(this, "Erro ao apagar: " + ex.getMessage(),
-                        "Erro", JOptionPane.ERROR_MESSAGE);
-            }
+    private void clicouApagar() {
+        int resposta = JOptionPane.showConfirmDialog(this,
+                "Deseja apagar a conta?", "Confirmar", JOptionPane.YES_NO_OPTION);
+
+        if (resposta == JOptionPane.YES_OPTION) {
+            arquivo.apagar();
+            atualizarTela();
         }
     }
 
     private void abrirAplicacao() {
-        dispose();
-        // TODO: troque pela tela principal da sua aplicação
+        dispose(); // fecha a tela de login
+        // Aqui você abre a tela principal da sua aplicação:
         // new TelaPrincipal().setVisible(true);
-        JOptionPane.showMessageDialog(null, "Login realizado!");
+            TelaPrincipal pnlMain = new TelaPrincipal();
+
+            JFrame frame = new JFrame("Afazeres");
+            frame.setContentPane(pnlMain.getPnlMain());
+            frame.pack();
+            frame.setVisible(true);
+
+            frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+            frame.addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override
+                public void windowClosing(java.awt.event.WindowEvent e) {
+                    pnlMain.salvar();
+                }
+            });
+
+
     }
 }
