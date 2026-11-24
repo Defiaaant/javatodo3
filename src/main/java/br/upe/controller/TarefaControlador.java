@@ -18,11 +18,16 @@ public class TarefaControlador {
         tarefaTableModel = new TarefaTableModel();
         carregarNotasSalvas();
     }
+
     private void carregarNotasSalvas() {
         List<List<Tarefa>> dados = GerenciarSaves.carregarNotas();
         tarefaTableModel.setTarefasAtivas(dados.get(0));
         tarefaTableModel.setTarefasFinalizadas(dados.get(1));
         tarefaTableModel.fireTableDataChanged();
+    }
+
+    public int removerFinalizados(int[] linhasSelecionadas) {
+        return tarefaTableModel.removerFinalizados(linhasSelecionadas);
     }
 
     //Metodos de negocio
