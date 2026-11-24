@@ -91,6 +91,27 @@ public class TarefaTableModel extends AbstractTableModel {
         br.upe.savetool.GerenciarSaves.salvarNotas(apenasAtivas, this.tarefasFinalizadas);
     }
 
+    public int removerFinalizados(int[] linhasSelecionadas) {
+        if (linhasSelecionadas == null || linhasSelecionadas.length == 0) {
+            return 0;
+        }
+        List<Tarefa> remover = new ArrayList<>();
+        for (int linha : linhasSelecionadas) {
+            if (linha >= 0 && linha < tarefasAtivas.size()) {
+                Tarefa tarefa = tarefasAtivas.get(linha);
+                if (Boolean.TRUE.equals(tarefa.isFinalizada())) {
+                    remover.add(tarefa);
+                }
+            }
+        }
+        if (!remover.isEmpty()) {
+            tarefasFinalizadas.removeAll(remover);
+            tarefasAtivas.removeAll(remover);
+            this.fireTableDataChanged();
+        }
+        return remover.size();
+    }
+
 
     public List<Tarefa> getTarefasFinalizadas() {
         return tarefasFinalizadas;

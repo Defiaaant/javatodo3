@@ -1,15 +1,12 @@
 {
-  "ativas": [
+  "ativas": [],
+  "finalizadas": [
     {
-      "descricao": "DO IT",
-      "dataCriacao": "2026-11-16",
-      "ordem": 0
-    },
-    {
-      "descricao": "Don\u0027t DO IT!",
-      "dataCriacao": "2026-11-16",
+      "descricao": "ouúwrhauo",
+      "dataCriacao": "2026-11-24",
+      "dataFinalizacao": "2026-11-24",
+      "finalizada": true,
       "ordem": 1
     }
-  ],
-  "finalizadas": []
+  ]
 }
