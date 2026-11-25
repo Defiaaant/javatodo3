@@ -9,13 +9,12 @@ import java.io.IOException;
 
 public class   TelaLogin extends JFrame implements ActionListener {
 
-    private ArquivoUsuario arquivo = new ArquivoUsuario();
-
     private JLabel lblTitulo = new JLabel("", SwingConstants.CENTER);
     private JTextField txtNome = new JTextField();
     private JPasswordField txtSenha = new JPasswordField();
     private JButton btnEntrar = new JButton();
     private JButton btnApagar = new JButton("Apagar conta");
+    private CredenciaisRepositorio arquivo = new CredenciaisRepositorio();
 
     public TelaLogin() {
         setTitle("Login");
@@ -95,8 +94,12 @@ public class   TelaLogin extends JFrame implements ActionListener {
                 "Deseja apagar a conta?", "Confirmar", JOptionPane.YES_NO_OPTION);
 
         if (resposta == JOptionPane.YES_OPTION) {
-            arquivo.apagar();
-            atualizarTela();
+            try {
+                arquivo.apagar();
+                atualizarTela();
+            } catch (IOException erro) {
+                JOptionPane.showMessageDialog(this, "Não foi possível apagar a conta!");
+            }
         }
     }
 
