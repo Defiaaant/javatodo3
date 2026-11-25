@@ -7,6 +7,13 @@
       "dataFinalizacao": "2026-11-24",
       "finalizada": true,
       "ordem": 1
+    },
+    {
+      "descricao": "shook ones",
+      "dataCriacao": "2026-11-24",
+      "dataFinalizacao": "2026-11-24",
+      "finalizada": true,
+      "ordem": 0
     }
   ]
 }

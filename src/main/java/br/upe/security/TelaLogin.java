@@ -1,5 +1,4 @@
 package br.upe.security;
-import br.upe.ui.TelaPrincipal;
 
 import javax.swing.*;
 import java.awt.GridLayout;
@@ -7,7 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
-public class   TelaLogin extends JFrame implements ActionListener {
+public class TelaLogin extends JFrame implements ActionListener {
 
     private JLabel lblTitulo = new JLabel("", SwingConstants.CENTER);
     private JTextField txtNome = new JTextField();
@@ -15,8 +14,11 @@ public class   TelaLogin extends JFrame implements ActionListener {
     private JButton btnEntrar = new JButton();
     private JButton btnApagar = new JButton("Apagar conta");
     private CredenciaisRepositorio arquivo = new CredenciaisRepositorio();
+    private final Runnable aoAutenticar;
 
-    public TelaLogin() {
+    public TelaLogin(Runnable aoAutenticar) {
+        this.aoAutenticar = aoAutenticar;
+
         setTitle("Login");
         setSize(300, 300);
         setLocationRelativeTo(null);
@@ -52,7 +54,6 @@ public class   TelaLogin extends JFrame implements ActionListener {
         txtSenha.setText("");
     }
 
-    // Método chamado quando qualquer botão é clicado
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnEntrar) {
@@ -73,14 +74,12 @@ public class   TelaLogin extends JFrame implements ActionListener {
 
         try {
             if (arquivo.existeConta()) {
-                // Já tem conta: confere os dados
                 if (arquivo.validar(nome, senha)) {
                     abrirAplicacao();
                 } else {
                     JOptionPane.showMessageDialog(this, "Nome ou senha incorretos!");
                 }
             } else {
-                // Não tem conta: cria uma nova
                 arquivo.salvar(nome, senha);
                 abrirAplicacao();
             }
@@ -104,24 +103,9 @@ public class   TelaLogin extends JFrame implements ActionListener {
     }
 
     private void abrirAplicacao() {
-        dispose(); // fecha a tela de login
-        // Aqui você abre a tela principal da sua aplicação:
-        // new TelaPrincipal().setVisible(true);
-            TelaPrincipal pnlMain = new TelaPrincipal();
-
-            JFrame frame = new JFrame("Afazeres");
-            frame.setContentPane(pnlMain.getPnlMain());
-            frame.pack();
-            frame.setVisible(true);
-
-            frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-            frame.addWindowListener(new java.awt.event.WindowAdapter() {
-                @Override
-                public void windowClosing(java.awt.event.WindowEvent e) {
-                    pnlMain.salvar();
-                }
-            });
-
-
+        dispose();
+           if (aoAutenticar != null) {
+               aoAutenticar.run();
+           }
     }
 }
