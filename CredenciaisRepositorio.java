@@ -1,4 +1,4 @@
-package br.upe.security;
+package br.upe;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
