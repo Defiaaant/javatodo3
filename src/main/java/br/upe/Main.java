@@ -1,13 +1,10 @@
 package br.upe;
 
 import br.upe.ui.TelaPrincipal;
-import br.upe.security.TelaLogin;
 
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
 import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.util.Collections;
 
 public class Main {
@@ -20,7 +17,8 @@ public class Main {
             }
         }
     }
-    public static void abrirAplicacao(){
+    public static void main(String[] args) {
+        fontes(16);
         TelaPrincipal pnlMain = new TelaPrincipal();
 
         JFrame frame = new JFrame("Afazeres");
@@ -28,18 +26,15 @@ public class Main {
         frame.pack();
         frame.setMinimumSize(new Dimension(520, 420));
         frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
 
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.addWindowListener(new WindowAdapter() {
+        frame.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
-            public void windowClosing(WindowEvent e) {
+            public void windowClosing(java.awt.event.WindowEvent e) {
                 pnlMain.salvar();
             }
         });
 
-        frame.setVisible(true);
     }
-    public static void main(String[] args) {
-        fontes(16);
-        SwingUtilities.invokeLater(() -> new TelaLogin(Main::abrirAplicacao).setVisible(true));    }
 }

@@ -1,26 +1,4 @@
 {
   "ativas": [],
-  "finalizadas": [
-    {
-      "descricao": "criação de gado em Goiás é realmente lucrativo",
-      "dataCriacao": "2026-11-24",
-      "dataFinalizacao": "2026-11-24",
-      "finalizada": true,
-      "ordem": 1
-    },
-    {
-      "descricao": "shook ones",
-      "dataCriacao": "2026-11-24",
-      "dataFinalizacao": "2026-11-24",
-      "finalizada": true,
-      "ordem": 0
-    },
-    {
-      "descricao": "bater em nego safado",
-      "dataCriacao": "2026-11-25",
-      "dataFinalizacao": "2026-11-25",
-      "finalizada": true,
-      "ordem": 0
-    }
-  ]
+  "finalizadas": []
 }

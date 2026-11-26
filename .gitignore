@@ -3,8 +3,6 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 notas.json
-notas.json.tmp
-notas.json.corrompido
 
 ### IntelliJ IDEA ###
 .idea/modules.xml
