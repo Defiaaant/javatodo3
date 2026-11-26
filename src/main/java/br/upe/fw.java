@@ -1,4 +1,6 @@
-import br.upe.TelaLogin;
+package br.upe;
+
+import br.upe.security.TelaLogin;
 
 import javax.swing.*;
 
