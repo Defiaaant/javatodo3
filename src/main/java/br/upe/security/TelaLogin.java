@@ -2,14 +2,18 @@ package br.upe.security;
 import br.upe.ui.TelaPrincipal;
 
 import javax.swing.*;
-import java.awt.GridLayout;
+import javax.swing.plaf.FontUIResource;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.nio.file.Files; //
-import java.nio.file.Paths; //
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Collections;
+import javax.swing.border.Border;
 
 import br.upe.savetool.GerenciarSaves;
+import org.jetbrains.annotations.NotNull;
 
 public class   TelaLogin extends JFrame implements ActionListener {
 
@@ -22,28 +26,36 @@ public class   TelaLogin extends JFrame implements ActionListener {
     private JButton btnApagar = new JButton("Apagar conta");
 
     public TelaLogin() {
+        fontes(16);
         setTitle("Login");
-        setSize(300, 300);
-        setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setLayout(new GridLayout(7, 1, 5, 5));
 
-        add(lblTitulo);
-        add(new JLabel("Nome:"));
-        add(txtNome);
-        add(new JLabel("Senha:"));
-        add(txtSenha);
-        add(btnEntrar);
-        add(btnApagar);
+        JPanel painel = new JPanel(new GridLayout(7,1,5,10));
+        painel.setBorder(BorderFactory.createEmptyBorder(10,15,2,15));
+        setContentPane(painel);
+
+        painel.add(lblTitulo);
+        painel.add(new JLabel("Nome:"));
+        painel.add(txtNome);
+        painel.add(new JLabel("Senha:"));
+        painel.add(txtSenha);
+        painel.add(btnEntrar);
+        painel.add(btnApagar);
+
+        Border padding = BorderFactory.createEmptyBorder(4,8,4,8);
+        txtNome.setBorder(BorderFactory.createCompoundBorder(txtNome.getBorder(),padding));
+        txtSenha.setBorder(BorderFactory.createCompoundBorder(txtSenha.getBorder(),padding));
 
         btnEntrar.addActionListener(this);
         btnApagar.addActionListener(this);
 
         atualizarTela();
+        setMinimumSize(new Dimension(340, 340));
+        setLocationRelativeTo(null);
     }
 
-    // Muda a tela dependendo se já existe conta ou não
     private void atualizarTela() {
+        lblTitulo.setFont(new Font("JetBrains Mono", Font.BOLD, 18));
         if (arquivo.existeConta()) {
             lblTitulo.setText("Entrar");
             btnEntrar.setText("Entrar");
@@ -58,7 +70,7 @@ public class   TelaLogin extends JFrame implements ActionListener {
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(@NotNull ActionEvent e) {
         if (e.getSource() == btnEntrar) {
             clicouEntrar();
         } else if (e.getSource() == btnApagar) {
@@ -77,14 +89,12 @@ public class   TelaLogin extends JFrame implements ActionListener {
 
         try {
             if (arquivo.existeConta()) {
-                // Já tem conta: confere os dados
                 if (arquivo.validar(nome, senha)) {
                     abrirAplicacao();
                 } else {
                     JOptionPane.showMessageDialog(this, "Nome ou senha incorretos!");
                 }
             } else {
-                // Não tem conta: cria uma nova
                 arquivo.salvar(nome, senha);
                 abrirAplicacao();
             }
@@ -107,15 +117,25 @@ public class   TelaLogin extends JFrame implements ActionListener {
             atualizarTela();
         }
     }
-
+    private void fontes(int tamanho){
+        for (Object chave : Collections.list(UIManager.getDefaults().keys())) {
+            Object valor = UIManager.get(chave);
+            if (valor instanceof FontUIResource) {
+                FontUIResource f = (FontUIResource) valor;
+                UIManager.put(chave, new FontUIResource(f.deriveFont((float) tamanho)));
+            }
+        }
+    }
     private void abrirAplicacao() {
         dispose();
-
+            fontes(16);
             TelaPrincipal pnlMain = new TelaPrincipal();
 
             JFrame frame = new JFrame("Afazeres");
             frame.setContentPane(pnlMain.getPnlMain());
             frame.pack();
+            frame.setMinimumSize(new Dimension(520, 420));
+            frame.setLocationRelativeTo(null);
             frame.setVisible(true);
 
             frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -125,7 +145,5 @@ public class   TelaLogin extends JFrame implements ActionListener {
                     pnlMain.salvar();
                 }
             });
-
-
     }
 }
