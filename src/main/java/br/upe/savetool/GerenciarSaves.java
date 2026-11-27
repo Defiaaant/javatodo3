@@ -2,9 +2,12 @@ package br.upe.savetool;
 
 import br.upe.model.Tarefa;
 import com.google.gson.*;
-import java.io.*;
+
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,18 +15,24 @@ import java.util.List;
 public class GerenciarSaves {
     private static final String caminho = "notas.json";
 
-    public static String getCaminho(){
+    public static String getCaminho() {
         return caminho;
     }
 
-    private static class DadosSalvos {
-        List<Tarefa> ativas;
-        List<Tarefa> finalizadas;
+    public static class DadosLista {
+        public String nome;
+        public List<Tarefa> ativas;
+        public List<Tarefa> finalizadas;
 
-        DadosSalvos(List<Tarefa> ativas, List<Tarefa> finalizadas) {
+        public DadosLista(String nome, List<Tarefa> ativas, List<Tarefa> finalizadas) {
+            this.nome = nome;
             this.ativas = ativas;
             this.finalizadas = finalizadas;
         }
+    }
+
+    private static class Arquivo {
+        List<DadosLista> listas;
     }
 
     private static Gson criarGson() {
@@ -36,44 +45,49 @@ public class GerenciarSaves {
                 .create();
     }
 
-    public static void salvarNotas(List<Tarefa> ativas, List<Tarefa> finalizadas) {
-        Gson gson = criarGson();
-        DadosSalvos dados = new DadosSalvos(ativas, finalizadas);
-        String json = gson.toJson(dados);
-
+    public static void salvarListas(List<DadosLista> listas) {
+        Arquivo arquivo = new Arquivo();
+        arquivo.listas = listas;
         try {
-            Files.writeString(Paths.get(caminho), json, StandardCharsets.UTF_8);
+            Files.writeString(Paths.get(caminho), criarGson().toJson(arquivo), StandardCharsets.UTF_8);
         } catch (IOException e) {
             System.err.println("Erro ao salvar notas: " + e.getMessage());
         }
     }
 
-    public static List<List<Tarefa>> carregarNotas() {
-        List<List<Tarefa>> resultado = new ArrayList<>();
+    public static List<DadosLista> carregarListas() {
+        List<DadosLista> resultado = new ArrayList<>();
         Path path = Paths.get(caminho);
 
-        if (!Files.exists(path)) {
-            resultado.add(new ArrayList<>());
-            resultado.add(new ArrayList<>());
-            return resultado;
-        }
-        try {
-            String json = Files.readString(path, StandardCharsets.UTF_8);
-            Gson gson = criarGson();
-            DadosSalvos dados = gson.fromJson(json, DadosSalvos.class);
+        if (Files.exists(path)) {
+            try {
+                Gson gson = criarGson();
+                JsonObject raiz = JsonParser.parseString(
+                        Files.readString(path, StandardCharsets.UTF_8)).getAsJsonObject();
 
-            if (dados != null) {
-                resultado.add(dados.ativas != null ? dados.ativas : new ArrayList<>());
-                resultado.add(dados.finalizadas != null ? dados.finalizadas : new ArrayList<>());
-            } else {
-                resultado.add(new ArrayList<>());
-                resultado.add(new ArrayList<>());
+                if (raiz.has("listas")) {
+                    Arquivo arquivo = gson.fromJson(raiz, Arquivo.class);
+                    if (arquivo.listas != null) resultado.addAll(arquivo.listas);
+                } else {
+                    DadosLista antiga = gson.fromJson(raiz, DadosLista.class);
+                    antiga.nome = "Minha lista";
+                    resultado.add(antiga);
+                }
+            } catch (IOException | JsonParseException | IllegalStateException
+                     | java.time.DateTimeException e) {
+                System.err.println("Erro ao ler Notas: " + e.getMessage());
+                resultado.clear();
             }
         }
-        catch (IOException | JsonParseException | java.time.DateTimeException e) {
-            System.err.println("Erro ao ler Notas: " + e.getMessage());
-            resultado.add(new ArrayList<>());
-            resultado.add(new ArrayList<>());
+
+        if (resultado.isEmpty()) {
+            resultado.add(new DadosLista("Minha lista", new ArrayList<>(), new ArrayList<>()));
+        }
+        for (int i = 0; i < resultado.size(); i++) {
+            DadosLista d = resultado.get(i);
+            if (d.nome == null || d.nome.isBlank()) d.nome = "Lista " + (i + 1);
+            if (d.ativas == null) d.ativas = new ArrayList<>();
+            if (d.finalizadas == null) d.finalizadas = new ArrayList<>();
         }
         return resultado;
     }

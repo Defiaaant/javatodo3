@@ -2,6 +2,7 @@ package br.upe.ui;
 
 import br.upe.controller.TarefaControlador;
 import br.upe.model.Tarefa;
+import br.upe.savetool.GerenciarSaves;
 
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
@@ -10,6 +11,7 @@ import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.net.URL;
+import java.util.List;
 import java.util.Locale;
 
 public class TelaPrincipal {
@@ -23,9 +25,9 @@ public class TelaPrincipal {
 
     private TarefaControlador controlador;
 
-    public TelaPrincipal() {
+    public TelaPrincipal(GerenciarSaves.DadosLista dados, Runnable aoAlterar) {
         super();
-        controlador = new TarefaControlador();
+        controlador = new TarefaControlador(dados.ativas, dados.finalizadas);
         tblTarefas = new JTable(controlador.getTarefaTableModel());
         tblTarefas.setTableHeader(null);
         tblTarefas.setRowHeight(30);
@@ -38,7 +40,7 @@ public class TelaPrincipal {
         btnAdicionarTarefa.setFont(btnAdicionarTarefa.getFont().deriveFont(Font.BOLD));
         txtDescricaoTarefa.setMargin(new Insets(4, 8, 4, 8));
 
-        controlador.getTarefaTableModel().addTableModelListener(e -> salvar());
+        controlador.getTarefaTableModel().addTableModelListener(e -> aoAlterar.run());
 
         btnAdicionarTarefa.addActionListener(e -> {
             adicionarTarefa(txtDescricaoTarefa.getText());
@@ -132,12 +134,12 @@ public class TelaPrincipal {
         controlador.adicionarTarefaAtiva(new Tarefa(texto.trim(), ordem));
     }
 
-    public void salvar() {
-        try {
-            controlador.getTarefaTableModel().salvarEstado();
-        } catch (Exception ex) {
-            System.err.println("Falha ao salvar: " + ex);
-        }
+    public List<Tarefa> getAtivasParaSalvar() {
+        return controlador.getTarefaTableModel().getAtivasParaSalvar();
+    }
+
+    public List<Tarefa> getTarefasFinalizadas() {
+        return controlador.getTarefaTableModel().getTarefasFinalizadas();
     }
 
     public JPanel getPnlMain() {
@@ -170,4 +172,5 @@ public class TelaPrincipal {
             }
         }
     }
+
 }

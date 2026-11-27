@@ -2,10 +2,7 @@ package br.upe.controller;
 
 import br.upe.model.Tarefa;
 import br.upe.model.TarefaTableModel;
-import br.upe.savetool.GerenciarSaves;
 
-import javax.swing.event.TableModelListener;
-import java.util.ArrayList;
 import java.util.List;
 
 public class TarefaControlador {
@@ -13,17 +10,11 @@ public class TarefaControlador {
     // Atributos
     private TarefaTableModel tarefaTableModel;
 
-    //Construtor
-    public TarefaControlador() {
+    //Construtor -> mudei ó kkk
+    public TarefaControlador(List<Tarefa> ativas, List<Tarefa> finalizadas) {
         tarefaTableModel = new TarefaTableModel();
-        carregarNotasSalvas();
-    }
-
-    private void carregarNotasSalvas() {
-        List<List<Tarefa>> dados = GerenciarSaves.carregarNotas();
-        tarefaTableModel.setTarefasAtivas(dados.get(0));
-        tarefaTableModel.setTarefasFinalizadas(dados.get(1));
-        tarefaTableModel.fireTableDataChanged();
+        tarefaTableModel.setTarefasAtivas(ativas);
+        tarefaTableModel.setTarefasFinalizadas(finalizadas);
     }
 
     public int removerFinalizados(int[] linhasSelecionadas) {

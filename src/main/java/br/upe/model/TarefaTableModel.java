@@ -2,9 +2,7 @@ package br.upe.model;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Vector;
 
 public class TarefaTableModel extends AbstractTableModel {
     private List<Tarefa> tarefasFinalizadas;
@@ -81,14 +79,14 @@ public class TarefaTableModel extends AbstractTableModel {
     }
 
 
-    public void salvarEstado() {
+    public List<Tarefa> getAtivasParaSalvar() {
         List<Tarefa> apenasAtivas = new ArrayList<>();
         for (Tarefa t : tarefasAtivas) {
-            if (t.isFinalizada() == null || !t.isFinalizada()) {
+            if (!t.isFinalizada()) {
                 apenasAtivas.add(t);
             }
         }
-        br.upe.savetool.GerenciarSaves.salvarNotas(apenasAtivas, this.tarefasFinalizadas);
+        return apenasAtivas;
     }
 
     public int removerFinalizados(int[] linhasSelecionadas) {

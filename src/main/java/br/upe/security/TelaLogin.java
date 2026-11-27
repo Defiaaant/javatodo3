@@ -1,7 +1,11 @@
 package br.upe.security;
-import br.upe.ui.TelaPrincipal;
+
+import br.upe.savetool.GerenciarSaves;
+import br.upe.ui.TelaAbas;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.plaf.FontUIResource;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -10,10 +14,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collections;
-import javax.swing.border.Border;
-
-import br.upe.savetool.GerenciarSaves;
-import org.jetbrains.annotations.NotNull;
 
 public class   TelaLogin extends JFrame implements ActionListener {
 
@@ -128,21 +128,21 @@ public class   TelaLogin extends JFrame implements ActionListener {
     }
     private void abrirAplicacao() {
         dispose();
-            fontes(16);
-            TelaPrincipal pnlMain = new TelaPrincipal();
+        fontes(16);
+        TelaAbas abas = new TelaAbas();
 
-            JFrame frame = new JFrame("Afazeres");
-            frame.setContentPane(pnlMain.getPnlMain());
-            frame.pack();
-            frame.setMinimumSize(new Dimension(520, 420));
-            frame.setLocationRelativeTo(null);
-            frame.setVisible(true);
+        JFrame frame = new JFrame("Afazeres");
+        frame.setContentPane(abas.getPainel());
+        frame.pack();
+        frame.setMinimumSize(new Dimension(520, 420));
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
 
-            frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-            frame.addWindowListener(new java.awt.event.WindowAdapter() {
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frame.addWindowListener(new java.awt.event.WindowAdapter() {
                 @Override
                 public void windowClosing(java.awt.event.WindowEvent e) {
-                    pnlMain.salvar();
+                    abas.salvar();
                 }
             });
     }
