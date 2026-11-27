@@ -6,6 +6,10 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.nio.file.Files; //
+import java.nio.file.Paths; //
+
+import br.upe.savetool.GerenciarSaves;
 
 public class   TelaLogin extends JFrame implements ActionListener {
 
@@ -53,7 +57,6 @@ public class   TelaLogin extends JFrame implements ActionListener {
         txtSenha.setText("");
     }
 
-    // Método chamado quando qualquer botão é clicado
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnEntrar) {
@@ -96,14 +99,18 @@ public class   TelaLogin extends JFrame implements ActionListener {
 
         if (resposta == JOptionPane.YES_OPTION) {
             arquivo.apagar();
+            try {
+                Files.deleteIfExists(Paths.get(GerenciarSaves.getCaminho()));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             atualizarTela();
         }
     }
 
     private void abrirAplicacao() {
-        dispose(); // fecha a tela de login
-        // Aqui você abre a tela principal da sua aplicação:
-        // new TelaPrincipal().setVisible(true);
+        dispose();
+
             TelaPrincipal pnlMain = new TelaPrincipal();
 
             JFrame frame = new JFrame("Afazeres");
