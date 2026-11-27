@@ -12,6 +12,10 @@ import java.util.List;
 public class GerenciarSaves {
     private static final String caminho = "notas.json";
 
+    public static String getCaminho(){
+        return caminho;
+    }
+
     private static class DadosSalvos {
         List<Tarefa> ativas;
         List<Tarefa> finalizadas;
