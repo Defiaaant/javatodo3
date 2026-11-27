@@ -9,7 +9,6 @@ public class ArquivoUsuario {
 
     private File arquivo = new File("usuario.txt");
 
-    // Retorna true se já existe um usuário salvo
     public boolean existeConta() {
         return arquivo.exists();
     }
@@ -22,7 +21,6 @@ public class ArquivoUsuario {
         escritor.close();
     }
 
-    // Confere se o nome e a senha digitados são iguais aos salvos
     public boolean validar(String nome, String senha) throws IOException {
         Scanner leitor = new Scanner(arquivo);
         String nomeSalvo = leitor.nextLine();
@@ -32,8 +30,8 @@ public class ArquivoUsuario {
         return nome.equals(nomeSalvo) && senha.equals(senhaSalva);
     }
 
-    // Apaga o arquivo (apaga a conta)
     public void apagar() {
+
         arquivo.delete();
     }
 }
